@@ -4,7 +4,7 @@ package engine;
  * Implements a high score record.
  * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ * for testing pull request
  */
 public class Score implements Comparable<Score> {
 
