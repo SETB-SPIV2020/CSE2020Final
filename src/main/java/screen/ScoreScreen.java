@@ -28,7 +28,8 @@ public class ScoreScreen extends Screen {
 	private static final int LAST_CHAR = 90;
 
 	/** Current score. */
-	private int score;
+	private int p1Score;
+	private int p2Score;
 	/** Player lives left. */
 	private int livesRemaining;
 	/** Total bullets shot by the player. */
@@ -62,7 +63,8 @@ public class ScoreScreen extends Screen {
 			final GameState gameState) {
 		super(width, height, fps);
 
-		this.score = gameState.getScore();
+		this.p1Score = gameState.getp1Score();
+		this.p2Score = gameState.getp2Score();
 		this.livesRemaining = gameState.getLivesRemaining();
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
@@ -76,7 +78,8 @@ public class ScoreScreen extends Screen {
 			this.highScores = Core.getFileManager().loadHighScores();
 			if (highScores.size() < MAX_HIGH_SCORE_NUM
 					|| highScores.get(highScores.size() - 1).getScore()
-					< this.score)
+					< this.p1Score || highScores.get(highScores.size() - 1).getScore()
+					< this.p2Score)
 				this.isNewRecord = true;
 
 		} catch (IOException e) {
@@ -151,7 +154,12 @@ public class ScoreScreen extends Screen {
 	 * Saves the score as a high score.
 	 */
 	private void saveScore() {
-		highScores.add(new Score(new String(this.name), score));
+		if(this.p1Score > this.p2Score){
+			highScores.add(new Score(new String(this.name), p1Score));
+		}
+		else{
+			highScores.add(new Score(new String(this.name), p2Score));
+		}
 		Collections.sort(highScores);
 		if (highScores.size() > MAX_HIGH_SCORE_NUM)
 			highScores.remove(highScores.size() - 1);
@@ -171,7 +179,7 @@ public class ScoreScreen extends Screen {
 
 		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
 				this.isNewRecord);
-		drawManager.drawResults(this, this.score, this.livesRemaining,
+		drawManager.drawResults(this, this.p1Score, this.p2Score ,this.livesRemaining,
 				this.shipsDestroyed, (float) this.shipsDestroyed
 						/ this.bulletsShot, this.isNewRecord);
 

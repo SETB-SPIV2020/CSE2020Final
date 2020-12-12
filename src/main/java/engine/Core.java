@@ -116,7 +116,7 @@ public final class Core {
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
+			gameState = new GameState(1, 0, 0,MAX_LIVES, 0, 0);
 
 			switch (returnCode) {
 			case 1:
@@ -146,7 +146,8 @@ public final class Core {
 					gameState = ((GameScreen) currentScreen).getGameState();
 
 					gameState = new GameState(gameState.getLevel() + 1,
-							gameState.getScore(),
+							gameState.getp1Score(),
+							gameState.getp2Score(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed());
@@ -156,7 +157,8 @@ public final class Core {
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " score screen at " + FPS + " fps, with a score of "
-						+ gameState.getScore() + ", "
+						+ gameState.getp1Score() + ", "
+						+ gameState.getp2Score() + ", "
 						+ gameState.getLivesRemaining() + " lives remaining, "
 						+ gameState.getBulletsShot() + " bullets shot and "
 						+ gameState.getShipsDestroyed() + " ships destroyed.");

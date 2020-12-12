@@ -59,7 +59,8 @@ public class GameScreen extends Screen {
 	/** Set of all bullets fired by on screen ships. */
 	private Set<Bullet> bullets;
 	/** Current score. */
-	private int score;
+	private int p1Score;
+	private int p2Score;
 	/** Player lives left. */
 	private int lives;
 	/** Total bullets shot by the player. */
@@ -99,7 +100,8 @@ public class GameScreen extends Screen {
 		this.gameSettings = gameSettings;
 		this.bonusLife = bonusLife;
 		this.level = gameState.getLevel();
-		this.score = gameState.getScore();
+		this.p1Score = gameState.getp1Score();
+		this.p2Score = gameState.getp2Score();
 		this.lives = gameState.getLivesRemaining();
 		if (this.bonusLife)
 			this.lives++;
@@ -140,8 +142,10 @@ public class GameScreen extends Screen {
 	public final int run() {
 		super.run();
 
-		this.score += LIFE_SCORE * (this.lives - 1);
-		this.logger.info("Screen cleared with a score of " + this.score);
+		this.p1Score += LIFE_SCORE * (this.lives);
+		this.p2Score += LIFE_SCORE * (this.lives);
+		this.logger.info("Screen cleared with a score of " + this.p1Score);
+		this.logger.info("Screen cleared with a score of " + this.p2Score);
 
 		return this.returnCode;
 	}
@@ -183,7 +187,7 @@ public class GameScreen extends Screen {
 					this.ship1.moveLeft();
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-					if (this.ship1.shoot(this.bullets))
+					if (this.ship1.shoot(this.bullets, 1))
 						this.bulletsShot++;
 			}
 
@@ -203,7 +207,7 @@ public class GameScreen extends Screen {
 					this.ship2.moveLeft();
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_COMMA))
-					if (this.ship2.shoot(this.bullets))
+					if (this.ship2.shoot(this.bullets, 2))
 						this.bulletsShot++;
 			}
 
@@ -269,7 +273,7 @@ public class GameScreen extends Screen {
 					bullet.getPositionY());
 
 		// Interface.
-		drawManager.drawScore(this, this.score);
+		drawManager.drawScore(this, this.p1Score, this.p2Score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 
@@ -333,7 +337,12 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						this.score += enemyShip.getPointValue();
+						if(bullet.getShipnum() == 1){
+							this.p1Score += enemyShip.getPointValue();
+						}
+						else{
+							this.p2Score += enemyShip.getPointValue();
+						}
 						this.shipsDestroyed++;
 						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
@@ -341,7 +350,8 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
+					this.p1Score += this.enemyShipSpecial.getPointValue();
+					this.p2Score += this.enemyShipSpecial.getPointValue();
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
@@ -383,7 +393,7 @@ public class GameScreen extends Screen {
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
-		return new GameState(this.level, this.score, this.lives,
+		return new GameState(this.level, this.p1Score, this.p2Score, this.lives,
 				this.bulletsShot, this.shipsDestroyed);
 	}
 }

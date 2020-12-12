@@ -233,14 +233,18 @@ public final class DrawManager {
 	 * 
 	 * @param screen
 	 *            Screen to draw on.
-	 * @param score
+	 * @param p1Score
+	 * @param p2Score
 	 *            Current score.
 	 */
-	public void drawScore(final Screen screen, final int score) {
+	public void drawScore(final Screen screen, final int p1Score, final int p2Score) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
-		String scoreString = String.format("%04d", score);
-		backBufferGraphics.drawString(scoreString, screen.getWidth() - 60, 25);
+		String p1ScoreString = String.format("%04d", p1Score);
+		backBufferGraphics.drawString(p1ScoreString, screen.getWidth() - 120, 25);
+
+		String p2ScoreString = String.format("%04d", p2Score);
+		backBufferGraphics.drawString(p2ScoreString, screen.getWidth() - 60, 25);
 	}
 
 	/**
@@ -332,7 +336,8 @@ public final class DrawManager {
 	 * 
 	 * @param screen
 	 *            Screen to draw on.
-	 * @param score
+	 * @param p1Score
+	 * @param p2Score
 	 *            Score obtained.
 	 * @param livesRemaining
 	 *            Lives remaining when finished.
@@ -343,10 +348,11 @@ public final class DrawManager {
 	 * @param isNewRecord
 	 *            If the score is a new high score.
 	 */
-	public void drawResults(final Screen screen, final int score,
+	public void drawResults(final Screen screen, final int p1Score, final int p2Score,
 			final int livesRemaining, final int shipsDestroyed,
 			final float accuracy, final boolean isNewRecord) {
-		String scoreString = String.format("score %04d", score);
+		String p1ScoreString = String.format("P1 score %04d", p1Score);
+		String p2ScoreString = String.format("P2 score %04d", p2Score);
 		String livesRemainingString = "lives remaining " + livesRemaining;
 		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
 		String accuracyString = String
@@ -355,16 +361,19 @@ public final class DrawManager {
 		int height = isNewRecord ? 4 : 2;
 
 		backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, scoreString, screen.getHeight()
+		drawCenteredRegularString(screen, p1ScoreString, screen.getHeight()
 				/ height);
+		drawCenteredRegularString(screen, p2ScoreString, screen.getHeight()
+				/ height + fontRegularMetrics.getHeight()
+				* 2);
 		drawCenteredRegularString(screen, livesRemainingString,
 				screen.getHeight() / height + fontRegularMetrics.getHeight()
-						* 2);
+						* 4);
 		drawCenteredRegularString(screen, shipsDestroyedString,
 				screen.getHeight() / height + fontRegularMetrics.getHeight()
-						* 4);
+						* 6);
 		drawCenteredRegularString(screen, accuracyString, screen.getHeight()
-				/ height + fontRegularMetrics.getHeight() * 6);
+				/ height + fontRegularMetrics.getHeight() * 8);
 	}
 
 	/**
