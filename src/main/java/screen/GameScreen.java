@@ -16,6 +16,8 @@ import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
 
+import static engine.Core.difficulty;
+
 /**
  * Implements the game screen, where the action happens.
  *
@@ -83,7 +85,7 @@ public class GameScreen extends Screen {
 	 *            Current game state.
 	 * @param gameSettings
 	 *            Current game settings.
-	 * @param bonnusLife
+	 * @param bonusLife
 	 *            Checks if a bonus life is awarded this level.
 	 * @param width
 	 *            Screen width.
@@ -282,7 +284,7 @@ public class GameScreen extends Screen {
 			int countdown = (int) ((INPUT_DELAY
 					- (System.currentTimeMillis()
 					- this.gameStartTime)) / 1000);
-			drawManager.drawCountDown(this, this.level, countdown,
+			drawManager.drawCountDown(this, this.level-difficulty, countdown,
 					this.bonusLife);
 			drawManager.drawHorizontalLine(this, this.height / 2 - this.height
 					/ 12);

@@ -10,6 +10,8 @@ import engine.Core;
 import engine.GameState;
 import engine.Score;
 
+import static engine.Core.difficulty;
+
 /**
  * Implements the score screen.
  * 
@@ -21,7 +23,7 @@ public class ScoreScreen extends Screen {
 	/** Milliseconds between changes in user selection. */
 	private static final int SELECTION_TIME = 200;
 	/** Maximum number of high scores. */
-	private static final int MAX_HIGH_SCORE_NUM = 7;
+	private static final int MAX_HIGH_SCORE_NUM = 21;
 	/** Code of first mayus character. */
 	private static final int FIRST_CHAR = 65;
 	/** Code of last mayus character. */
