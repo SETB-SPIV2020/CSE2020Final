@@ -16,6 +16,8 @@ import screen.Screen;
 import entity.Entity;
 import entity.Ship;
 
+import static engine.Core.difficulty;
+
 /**
  * Manages screen drawing.
  * 
@@ -494,11 +496,16 @@ public final class DrawManager {
 		String scoreString = "";
 
 		for (Score score : highScores) {
-			scoreString = String.format("%s        %04d", score.getName(),
-					score.getScore());
-			drawCenteredRegularString(screen, scoreString, screen.getHeight()
-					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
-			i++;
+			if(score.getDifficulty()==difficulty) {
+				scoreString = String.format("%s        %04d", score.getName(),
+						score.getScore());
+				drawCenteredRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				i++;
+				if (i == 7) {
+					break;
+				}
+			}
 		}
 	}
 

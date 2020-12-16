@@ -36,7 +36,7 @@ public final class FileManager {
 	/** Application logger. */
 	private static Logger logger;
 	/** Max number of high scores. */
-	private static final int MAX_SCORES = 7;
+	private static final int MAX_SCORES = 21;
 
 	/**
 	 * private constructor.
@@ -149,12 +149,14 @@ public final class FileManager {
 			Score highScore = null;
 			String name = reader.readLine();
 			String score = reader.readLine();
+			String diff = reader.readLine();
 
 			while ((name != null) && (score != null)) {
 				highScore = new Score(name, Integer.parseInt(score));
 				highScores.add(highScore);
 				name = reader.readLine();
 				score = reader.readLine();
+				diff = reader.readLine();
 			}
 		} finally {
 			if (inputStream != null)
@@ -197,12 +199,14 @@ public final class FileManager {
 			Score highScore = null;
 			String name = bufferedReader.readLine();
 			String score = bufferedReader.readLine();
+			String diff = bufferedReader.readLine();
 
 			while ((name != null) && (score != null)) {
 				highScore = new Score(name, Integer.parseInt(score));
 				highScores.add(highScore);
 				name = bufferedReader.readLine();
 				score = bufferedReader.readLine();
+				diff = bufferedReader.readLine();
 			}
 
 		} catch (FileNotFoundException e) {
@@ -259,6 +263,8 @@ public final class FileManager {
 				bufferedWriter.write(score.getName());
 				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getScore()));
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getDifficulty()));
 				bufferedWriter.newLine();
 				savedCount++;
 			}
