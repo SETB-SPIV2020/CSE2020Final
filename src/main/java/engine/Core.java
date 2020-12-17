@@ -11,11 +11,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import screen.GameScreen;
-import screen.HighScoreScreen;
-import screen.ScoreScreen;
-import screen.Screen;
-import screen.TitleScreen;
+import screen.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -26,7 +22,7 @@ import javax.swing.border.TitledBorder;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public final class Core implements ActionListener {
+public final class Core{
 
 	/** Width of current screen. */
 	private static final int WIDTH = 448;
@@ -131,8 +127,9 @@ public final class Core implements ActionListener {
 		/* calling core method, opening JFrame to select difficulties*/
 		Core core = new Core();
 		int returnCode = 1;
+		int selectLevelCode = 2;
 		do {
-			gameState = new GameState(1+difficulty, 0, 0,MAX_LIVES, 0, 0);
+			gameState = new GameState(1+difficulty, 0, 0,MAX_LIVES, MAX_LIVES, 0, 0);
 			switch(difficulty){
 				case 1:
 					LOGGER.info("Chosen Difficulty: MEDIUM");
@@ -159,7 +156,8 @@ public final class Core implements ActionListener {
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
-							&& gameState.getLivesRemaining() < MAX_LIVES;
+							&& gameState.getp1LivesRemaining() < MAX_LIVES
+							&& gameState.getp2LivesRemaining() < MAX_LIVES;
 					
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
@@ -174,18 +172,20 @@ public final class Core implements ActionListener {
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getp1Score(),
 							gameState.getp2Score(),
-							gameState.getLivesRemaining(),
+							gameState.getp1LivesRemaining(),
+							gameState.getp2LivesRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed());
 
-				} while (gameState.getLivesRemaining() > 0
+				} while (gameState.getp1LivesRemaining() > 0 && gameState.getp2LivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " score screen at " + FPS + " fps, with a score of "
 						+ gameState.getp1Score() + ", "
 						+ gameState.getp2Score() + ", "
-						+ gameState.getLivesRemaining() + " lives remaining, "
+						+ gameState.getp1LivesRemaining() + " P1 lives remaining, "
+						+ gameState.getp2LivesRemaining() + " P2 lives remaining, "
 						+ gameState.getBulletsShot() + " bullets shot and "
 						+ gameState.getShipsDestroyed() + " ships destroyed.");
 				currentScreen = new ScoreScreen(width, height, FPS, gameState);
@@ -193,6 +193,40 @@ public final class Core implements ActionListener {
 				LOGGER.info("Closing score screen.");
 				break;
 			case 3:
+				currentScreen = new SelectLevelScreen(width, height, FPS);
+				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+						+ " high score screen at " + FPS + " fps.");
+				returnCode = frame.setScreen(currentScreen);
+				switch(returnCode){
+					case 2:
+						difficulty = 0;
+						LOGGER.info("Set Level Easy");
+						currentScreen = new TitleScreen(width, height, FPS);
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " title screen at " + FPS + " fps.");
+						returnCode = frame.setScreen(currentScreen);
+						LOGGER.info("Closing title screen.");
+						break;
+					case 3:
+						difficulty = 1;
+						LOGGER.info("Set Level normal");
+						currentScreen = new TitleScreen(width, height, FPS);
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " title screen at " + FPS + " fps.");
+						returnCode = frame.setScreen(currentScreen);
+						LOGGER.info("Closing title screen.");
+						break;
+					case 4:
+						difficulty = 2;
+						LOGGER.info("Set Level Hard");
+						currentScreen = new TitleScreen(width, height, FPS);
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " title screen at " + FPS + " fps.");
+						returnCode = frame.setScreen(currentScreen);
+						LOGGER.info("Closing title screen.");
+				}
+				break;
+			case 4:
 				// High scores.
 				currentScreen = new HighScoreScreen(width, height, FPS);
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
@@ -214,42 +248,6 @@ public final class Core implements ActionListener {
 	/**
 	 * Constructor, not called.
 	 */
-	JFrame Jframe = new JFrame();
-	JPanel panel = new JPanel();
-	JComboBox<String> check_box = new JComboBox<String>();
-	JButton buyButton = new JButton("Select");
-	private static Font fontRegular;
-
-	private Core() {
-		panel.setLayout(null);
-//Label position setting
-		panel.setFont(fontRegular);
-		panel.setBorder(new TitledBorder("Difficulties"));
-		panel.setBounds(380,80,490,280);
-		panel.setLayout(null);
-
-		check_box.addItem("Easy");
-		check_box.addItem("Medium");
-		check_box.addItem("Hard");
-		check_box.setBounds(60,40,70,30);
-		check_box.addActionListener(check_box);
-
-		buyButton.setBounds(150,40,60,35);
-		buyButton.addActionListener(this);
-
-//adding labels to panel
-		panel.add(check_box);
-		panel.add(buyButton);
-//attach panel in frame
-		Jframe.add(panel);
-//setting frame
-		Jframe.setTitle("Select difficulty");
-		Jframe.setSize(320,130);
-		Jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Jframe.setVisible(true);
-
-		check_box.addActionListener(check_box);
-	}
 
 	/**
 	 * Controls access to the logger.
@@ -312,11 +310,4 @@ public final class Core implements ActionListener {
 		return new Cooldown(milliseconds, variance);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==buyButton) {
-			difficulty = check_box.getSelectedIndex();
-			JOptionPane.showMessageDialog(null, "Selected Level: "+check_box.getSelectedItem(),"Messege", JOptionPane.WARNING_MESSAGE);
-		}
-	}
 }

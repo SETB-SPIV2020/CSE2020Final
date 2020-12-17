@@ -64,7 +64,8 @@ public class GameScreen extends Screen {
 	private int p1Score;
 	private int p2Score;
 	/** Player lives left. */
-	private int lives;
+	private int p1Lives;
+	private int p2Lives;
 	/** Total bullets shot by the player. */
 	private int bulletsShot;
 	/** Total ships destroyed by the player. */
@@ -104,9 +105,12 @@ public class GameScreen extends Screen {
 		this.level = gameState.getLevel();
 		this.p1Score = gameState.getp1Score();
 		this.p2Score = gameState.getp2Score();
-		this.lives = gameState.getLivesRemaining();
-		if (this.bonusLife)
-			this.lives++;
+		this.p1Lives = gameState.getp1LivesRemaining();
+		this.p2Lives = gameState.getp2LivesRemaining();
+		if (this.bonusLife) {
+			this.p1Lives++;
+			this.p2Lives++;
+		}
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 	}
@@ -144,8 +148,8 @@ public class GameScreen extends Screen {
 	public final int run() {
 		super.run();
 
-		this.p1Score += LIFE_SCORE * (this.lives);
-		this.p2Score += LIFE_SCORE * (this.lives);
+		this.p1Score += LIFE_SCORE * (this.p1Lives);
+		this.p2Score += LIFE_SCORE * (this.p2Lives);
 		this.logger.info("Screen cleared with a score of " + this.p1Score);
 		this.logger.info("Screen cleared with a score of " + this.p2Score);
 
@@ -242,7 +246,7 @@ public class GameScreen extends Screen {
 		cleanBullets();
 		draw();
 
-		if ((this.enemyShipFormation.isEmpty() || this.lives <= 0)
+		if ((this.enemyShipFormation.isEmpty() || this.p1Lives <= 0 && this.p2Lives <= 0)
 				&& !this.levelFinished) {
 			this.levelFinished = true;
 			this.screenFinishedCooldown.reset();
@@ -276,7 +280,7 @@ public class GameScreen extends Screen {
 
 		// Interface.
 		drawManager.drawScore(this, this.p1Score, this.p2Score);
-		drawManager.drawLives(this, this.lives);
+		drawManager.drawLives(this, this.p1Lives, this.p2Lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 
 		// Countdown to game start.
@@ -321,8 +325,8 @@ public class GameScreen extends Screen {
 					recyclable.add(bullet);
 					if (!this.ship1.isDestroyed()) {
 						this.ship1.destroy();
-						this.lives--;
-						this.logger.info("Hit on player ship, " + this.lives
+						this.p1Lives--;
+						this.logger.info("Hit on player ship, " + this.p1Lives
 								+ " lives remaining.");
 					}
 				}
@@ -330,8 +334,8 @@ public class GameScreen extends Screen {
 					recyclable.add(bullet);
 					if (!this.ship2.isDestroyed()) {
 						this.ship2.destroy();
-						this.lives--;
-						this.logger.info("Hit on player ship, " + this.lives
+						this.p2Lives--;
+						this.logger.info("Hit on player ship, " + this.p2Lives
 								+ " lives remaining.");
 					}
 				}
@@ -395,7 +399,7 @@ public class GameScreen extends Screen {
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
-		return new GameState(this.level, this.p1Score, this.p2Score, this.lives,
+		return new GameState(this.level, this.p1Score, this.p2Score, this.p1Lives, this.p2Lives,
 				this.bulletsShot, this.shipsDestroyed);
 	}
 }

@@ -254,16 +254,23 @@ public final class DrawManager {
 	 * 
 	 * @param screen
 	 *            Screen to draw on.
-	 * @param lives
+	 * @param P1Lives
+	 * @param P2Lives
 	 *            Current lives.
 	 */
-	public void drawLives(final Screen screen, final int lives) {
+	public void drawLives(final Screen screen, final int p1Lives, final int p2Lives) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
-		backBufferGraphics.drawString(Integer.toString(lives), 20, 25);
+		backBufferGraphics.drawString(Integer.toString(p1Lives), 20, 25);
+		int i;
 		Ship dummyShip = new Ship(0, 0, Color.BLUE);
-		for (int i = 0; i < lives; i++)
+		for (i = 0; i < p1Lives; i++)
 			drawEntity(dummyShip, 40 + 35 * i, 10);
+		Ship dummyShip2 = new Ship(0, 0, Color.RED);
+		for (int j = 0; j < p2Lives; j++)
+			drawEntity(dummyShip2, 40 + 35 * (i + j), 10);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString(Integer.toString(p2Lives), 40 + 35 * (p1Lives+p2Lives), 25);
 	}
 
 	/**
@@ -308,8 +315,43 @@ public final class DrawManager {
 	 * @param option
 	 *            Option selected.
 	 */
+	public void drawLevelSelectMenu(final Screen screen, final int option){
+		String titleString = "Invaders";
+		String instructionsString = "select with w+s / arrows, confirm with space";
+		String easyString = "Easy";
+		String normalString = "Normal";
+		String hardString = "Hard";
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 2);
+
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, titleString, screen.getHeight() / 3);
+		if(option == 2){
+			backBufferGraphics.setColor(Color.GREEN);
+		}
+		else
+			backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, easyString, (screen.getHeight() / 3 * 2) - 40);
+		if(option == 3){
+			backBufferGraphics.setColor(Color.GREEN);
+		}
+		else
+			backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, normalString,
+				screen.getHeight() / 3 * 2);
+		if(option == 4){
+			backBufferGraphics.setColor(Color.GREEN);
+		}
+		else
+			backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, hardString, screen.getHeight()
+				/ 3 * 2 + fontRegularMetrics.getHeight() * 2);
+	}
+
 	public void drawMenu(final Screen screen, final int option) {
 		String playString = "Play";
+		String levelString = "Select Level";
 		String highScoresString = "High scores";
 		String exitString = "exit";
 
@@ -318,8 +360,14 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, playString,
-				screen.getHeight() / 3 * 2);
+				(screen.getHeight() / 3 * 2) - 40);
 		if (option == 3)
+			backBufferGraphics.setColor(Color.GREEN);
+		else
+			backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, levelString,
+				screen.getHeight() / 3 * 2);
+		if (option == 4)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
@@ -341,7 +389,8 @@ public final class DrawManager {
 	 * @param p1Score
 	 * @param p2Score
 	 *            Score obtained.
-	 * @param livesRemaining
+	 * @param p1LivesRemainingString
+	 * @param p2LivesRemainingString
 	 *            Lives remaining when finished.
 	 * @param shipsDestroyed
 	 *            Total ships destroyed.
@@ -350,12 +399,11 @@ public final class DrawManager {
 	 * @param isNewRecord
 	 *            If the score is a new high score.
 	 */
-	public void drawResults(final Screen screen, final int p1Score, final int p2Score,
-			final int livesRemaining, final int shipsDestroyed,
-			final float accuracy, final boolean isNewRecord) {
+	public void drawResults(final Screen screen, final int p1Score, final int p2Score, final int p1LivesRemaining, final int p2LivesRemaining ,final int shipsDestroyed, final float accuracy, final boolean isNewRecord) {
 		String p1ScoreString = String.format("P1 score %04d", p1Score);
 		String p2ScoreString = String.format("P2 score %04d", p2Score);
-		String livesRemainingString = "lives remaining " + livesRemaining;
+		String p1LivesRemainingString = "P1 lives remaining " + p1LivesRemaining;
+		String p2LivesRemainingString = "P2 lives remaining " + p2LivesRemaining;
 		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
 		String accuracyString = String
 				.format("accuracy %.2f%%", accuracy * 100);
@@ -364,18 +412,21 @@ public final class DrawManager {
 
 		backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, p1ScoreString, screen.getHeight()
-				/ height);
+				/ height - 40);
 		drawCenteredRegularString(screen, p2ScoreString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight()
-				* 2);
-		drawCenteredRegularString(screen, livesRemainingString,
+				* 2 - 40);
+		drawCenteredRegularString(screen, p1LivesRemainingString,
 				screen.getHeight() / height + fontRegularMetrics.getHeight()
-						* 4);
+						* 4 - 40);
+		drawCenteredRegularString(screen, p2LivesRemainingString,
+				screen.getHeight() / height + fontRegularMetrics.getHeight()
+						* 6 - 40);
 		drawCenteredRegularString(screen, shipsDestroyedString,
 				screen.getHeight() / height + fontRegularMetrics.getHeight()
-						* 6);
+						* 8 - 40);
 		drawCenteredRegularString(screen, accuracyString, screen.getHeight()
-				/ height + fontRegularMetrics.getHeight() * 8);
+				/ height + fontRegularMetrics.getHeight() * 10 - 40);
 	}
 
 	/**
