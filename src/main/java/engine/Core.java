@@ -217,7 +217,7 @@ public final class Core implements ActionListener {
 	JFrame Jframe = new JFrame();
 	JPanel panel = new JPanel();
 	JComboBox<String> check_box = new JComboBox<String>();
-	JButton buyButton = new JButton("선택");
+	JButton buyButton = new JButton("Select");
 	private static Font fontRegular;
 
 	private Core() {
@@ -316,7 +316,7 @@ public final class Core implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==buyButton) {
 			difficulty = check_box.getSelectedIndex();
-			JOptionPane.showMessageDialog(null, "선택한 난이도: "+check_box.getSelectedItem(),"메시지", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Selected Level: "+check_box.getSelectedItem(),"Messege", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 }

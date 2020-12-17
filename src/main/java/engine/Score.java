@@ -12,7 +12,6 @@ public class Score implements Comparable<Score> {
 	private String name;
 	/** Score points. */
 	private int score;
-	private int difficulty;
 
 	/**
 	 * Constructor.
@@ -25,7 +24,6 @@ public class Score implements Comparable<Score> {
 	public Score(final String name, final int score) {
 		this.name = name;
 		this.score = score;
-		this.difficulty = difficulty;
 	}
 
 	/**
@@ -45,8 +43,6 @@ public class Score implements Comparable<Score> {
 	public final int getScore() {
 		return this.score;
 	}
-
-	public final int getDifficulty() {return this.difficulty; }
 	/**
 	 * Orders the scores descending by score.
 	 * 
