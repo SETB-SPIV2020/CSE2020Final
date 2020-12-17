@@ -496,15 +496,13 @@ public final class DrawManager {
 		String scoreString = "";
 
 		for (Score score : highScores) {
-			if(score.getDifficulty()==difficulty) {
-				scoreString = String.format("%s        %04d", score.getName(),
+			scoreString = String.format("%s        %04d", score.getName(),
 						score.getScore());
-				drawCenteredRegularString(screen, scoreString, screen.getHeight()
+			drawCenteredRegularString(screen, scoreString, screen.getHeight()
 						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
-				i++;
-				if (i == 7) {
-					break;
-				}
+			i++;
+			if (i == 7) {
+				break;
 			}
 		}
 	}

@@ -149,14 +149,12 @@ public final class FileManager {
 			Score highScore = null;
 			String name = reader.readLine();
 			String score = reader.readLine();
-			String diff = reader.readLine();
 
 			while ((name != null) && (score != null)) {
 				highScore = new Score(name, Integer.parseInt(score));
 				highScores.add(highScore);
 				name = reader.readLine();
 				score = reader.readLine();
-				diff = reader.readLine();
 			}
 		} finally {
 			if (inputStream != null)
@@ -198,16 +196,24 @@ public final class FileManager {
 
 			Score highScore = null;
 			String name = bufferedReader.readLine();
+			System.out.println(name);
 			String score = bufferedReader.readLine();
-			String diff = bufferedReader.readLine();
+			System.out.println(score);
 
 			while ((name != null) && (score != null)) {
 				highScore = new Score(name, Integer.parseInt(score));
 				highScores.add(highScore);
 				name = bufferedReader.readLine();
+				System.out.println(name);
 				score = bufferedReader.readLine();
-				diff = bufferedReader.readLine();
+				System.out.println(score);
 			}
+			/*for(int i = 0 ; i < 10; i++){
+				name = bufferedReader.readLine();
+				System.out.println(name);
+				score = bufferedReader.readLine();
+				System.out.println(score);
+			}*/
 
 		} catch (FileNotFoundException e) {
 			// loads default if there's no user scores.
@@ -263,8 +269,6 @@ public final class FileManager {
 				bufferedWriter.write(score.getName());
 				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getScore()));
-				bufferedWriter.newLine();
-				bufferedWriter.write(Integer.toString(score.getDifficulty()));
 				bufferedWriter.newLine();
 				savedCount++;
 			}
